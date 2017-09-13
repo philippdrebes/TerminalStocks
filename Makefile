@@ -3,7 +3,7 @@
 # be found in the LICENSE file.
 
 VERSION = 0.2.0
-PACKAGE = github.com/brandleesee/TerminalStocks/cmd/TerminalStocks
+PACKAGE = github.com/philippdrebes/TerminalStocks/cmd/TerminalStocks
 
 run:
 	go run ./cmd/TerminalStocks/main.go

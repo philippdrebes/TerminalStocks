@@ -6,7 +6,7 @@
 package main
 
 import (
-	`github.com/brandleesee/TerminalStocks`
+	`github.com/philippdrebes/TerminalStocks`
 	`github.com/michaeldv/termbox-go`
 	`time`
 )
@@ -36,6 +36,7 @@ func mainLoop(screen *TerminalStocks.Screen, profile *TerminalStocks.Profile) {
 
 	keyboardQueue := make(chan termbox.Event)
 	timestampQueue := time.NewTicker(1 * time.Second)
+	timezoneQueue := time.NewTicker(5 * time.Second)
 	quotesQueue := time.NewTicker(5 * time.Second)
 	marketQueue := time.NewTicker(12 * time.Second)
 	showingHelp := false
@@ -98,6 +99,11 @@ loop:
 			}
 
 		case <-timestampQueue.C:
+			if !showingHelp && !paused {
+				screen.Draw(time.Now())
+			}
+
+		case <-timezoneQueue.C:
 			if !showingHelp && !paused {
 				screen.Draw(time.Now())
 			}

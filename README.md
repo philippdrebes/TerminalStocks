@@ -19,27 +19,13 @@ This repository assimilates the following fixes:
 ```bash
 sudo apt -y install golang
 mkdir -p ~/go
-sudo mkdir -p /etc/profile.d/
 ```
 
-### Create Go Environment
+
+### Set GOPATH
 
 ```bash
-sudo nautilus /etc/profile.d/goenv.sh
-```
-
-### Put the following in the Go Environment file `` goenv.sh ``
-
-```bash
-    export GOROOT=/usr/lib/go
     export GOPATH=$HOME/go
-    export PATH=$PATH:$GOROOT/bin:$GOPATH/bin
-```
-
-### Make Go Environment recognised by system
-    
-```bash
-source /etc/profile.d/goenv.sh
 ```
 
 ## Installing Terminal Stocks in Ubuntu and derivatives
@@ -55,8 +41,8 @@ see instructions above
 ### Build Terminal Stocks and install it in `` $GOPATH/bin ``:
 
 ```bash
-go get github.com/brandleesee/TerminalStocks
-cd $GOPATH/src/github.com/brandleesee/TerminalStocks
+go get github.com/philippdrebes/TerminalStocks
+cd $GOPATH/src/github.com/philippdrebes/TerminalStocks
 make install
 ```
 
