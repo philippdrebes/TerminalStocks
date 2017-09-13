@@ -50,6 +50,8 @@ func mainLoop(screen *TerminalStocks.Screen, profile *TerminalStocks.Profile) {
 
 	market := TerminalStocks.NewMarket()
 	quotes := TerminalStocks.NewQuotes(market, profile)
+
+	screen.SetTimezones(profile.Timezones)
 	screen.Draw(market, quotes)
 
 loop:
@@ -105,7 +107,7 @@ loop:
 
 		case <-timezoneQueue.C:
 			if !showingHelp && !paused {
-				screen.Draw(time.Now())
+				screen.ChangeTimezone()
 			}
 
 		case <-quotesQueue.C:

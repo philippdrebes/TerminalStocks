@@ -13,12 +13,14 @@ import (
 // Screen is thin wrapper aroung Termbox library to provide basic display
 // capabilities as requied by Mop.
 type Screen struct {
-	width    int        // Current number of columns.
-	height   int        // Current number of rows.
-	cleared  bool       // True after the screens gets cleared.
-	layout   *Layout    // Pointer to layout (gets created by screen).
-	markup   *Markup    // Pointer to markup processor (gets created by screen).
-	pausedAt *time.Time // Timestamp of the pause request or nil if none.
+	width    		int        // Current number of columns.
+	height   		int        // Current number of rows.
+	cleared  		bool       // True after the screens gets cleared.
+	layout   		*Layout    // Pointer to layout (gets created by screen).
+	markup   		*Markup    // Pointer to markup processor (gets created by screen).
+	pausedAt 		*time.Time // Timestamp of the pause request or nil if none.
+	timezones 		[]string   // Array of timezones
+	timezoneIndex   int		   // Index of the active timezone
 }
 
 // Initializes Termbox, creates screen along with layout and markup, and
@@ -31,6 +33,7 @@ func NewScreen() *Screen {
 	screen := &Screen{}
 	screen.layout = NewLayout()
 	screen.markup = NewMarkup()
+	screen.timezoneIndex = 0
 
 	return screen.Resize()
 }
@@ -86,12 +89,12 @@ func (screen *Screen) ClearLine(x int, y int) *Screen {
 // Draw accepts variable number of arguments and knows how to display the
 // market data, stock quotes, current time, and an arbitrary string.
 func (screen *Screen) Draw(objects ...interface{}) *Screen {
-	loc, _ := time.LoadLocation("America/New_York")
-	//loc, _ := time.LoadLocation("UTC")
-	//loc, _ := time.LoadLocation("Europe/Zurich")
+	loc, _ := time.LoadLocation(screen.timezones[screen.timezoneIndex])
 	zonename, _ := time.Now().In(loc).Zone()
+	localzonename, _ := time.Now().In(time.Local).Zone()
+
 	if screen.pausedAt != nil {
-		defer screen.DrawLine(0, 0, `<right><r>`+screen.pausedAt.In(time.Local).Format(`Mon, 02 Jan, 2006 15:04:05 ` + zonename)+`</r></right>`)
+		defer screen.DrawLine(0, 0, `<right><r>`+screen.pausedAt.In(time.Local).Format(`Mon, 02 Jan, 2006 15:04:05 ` + localzonename)+`</r></right>`)
 	}
 	for _, ptr := range objects {
 		switch ptr.(type) {
@@ -145,5 +148,16 @@ func (screen *Screen) draw(str string) {
 	}
 	for row, line := range strings.Split(str, "\n") {
 		screen.DrawLine(0, row, line)
+	}
+}
+
+func (screen *Screen) SetTimezones(timezones []string) {
+	screen.timezones = timezones
+}
+
+func (screen *Screen) ChangeTimezone() {
+	screen.timezoneIndex++
+	if screen.timezoneIndex >= len(screen.timezones) {
+		screen.timezoneIndex = 0
 	}
 }

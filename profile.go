@@ -18,13 +18,15 @@ const TSrc = `/.TSrc`
 // stock tickers). The settings are serialized using JSON and saved in
 // the ~/.TSrc file.
 type Profile struct {
-	Tickers        []string // List of stock tickers to display.
-	MarketRefresh  int      // Time interval to refresh market data.
-	QuotesRefresh  int      // Time interval to refresh stock quotes.
-	SortColumn     int      // Column number by which we sort stock quotes.
-	Ascending      bool     // True when sort order is ascending.
-	Grouped        bool     // True when stocks are grouped by advancing/declining.
-	selectedColumn int      // Stores selected column number when the column editor is active.
+	Tickers        	[]string // List of stock tickers to display.
+	Timezones 	   	[]string // Array of supported timezones
+	TimezoneRefresh int      // Time interval to cycle through timezones.
+	MarketRefresh  	int      // Time interval to refresh market data.
+	QuotesRefresh  	int      // Time interval to refresh stock quotes.
+	SortColumn     	int      // Column number by which we sort stock quotes.
+	Ascending      	bool     // True when sort order is ascending.
+	Grouped        	bool     // True when stocks are grouped by advancing/declining.
+	selectedColumn 	int      // Stores selected column number when the column editor is active.
 }
 
 // Creates the profile and attempts to load the settings from ~/.TSrc file.
@@ -37,6 +39,8 @@ func NewProfile() *Profile {
 		profile.QuotesRefresh = 5  // Stock quotes get updated every 5s (12 times per minute).
 		profile.Grouped = false    // Stock quotes are *not* grouped by advancing/declining.
 		profile.Tickers = []string{`AAPL`, `C`, `GOOG`, `IBM`, `KO`, `ORCL`, `V`}
+		profile.Timezones = []string{"America/New_York", "UTC", "Europe/Zurich"}
+		profile.TimezoneRefresh = 5
 		profile.SortColumn = 0   // Stock quotes are sorted by ticker name.
 		profile.Ascending = true // A to Z.
 		profile.Save()
